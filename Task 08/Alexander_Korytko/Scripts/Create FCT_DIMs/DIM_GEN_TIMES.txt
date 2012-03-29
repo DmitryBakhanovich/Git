@@ -1,0 +1,36 @@
+alter table "u_dw_references".FCT_TRANSACTIONS_MONTH
+   drop constraint FK_FCT_TRAN_REFERENCE_DIM_GEN_;
+
+drop table "u_dw_references".DIM_GEN_TIMES cascade constraints;
+
+/*==============================================================*/
+/* Table: DIM_GEN_TIMES                                         */
+/*==============================================================*/
+create table "u_dw_references".DIM_GEN_TIMES 
+(
+   EVENT_DT             DATE                 not null,
+   CALENDAR_YEAR_ID     NUMBER(10),
+   CALENDAR_YEAR_DESC   NUMBER(10),
+   DAYS_IN_CAL_YEAR     NUMBER(10),
+   BEGIN_OF_CAL_YEAR    DATE,
+   END_OF_CAL_YEAR      DATE,
+   CALENDAR_QUARTER_ID  NUMBER(10),
+   CALENDAR_QUARTER_NUMBER NUMBER(10),
+   DAYS_IN_CAL_QUARTER  NUMBER(10),
+   BEGIN_OF_CAL_QUARTER DATE,
+   END_OF_CAL_QUARTER   DATE,
+   CALENDAR_MONTH_ID    NUMBER(10),
+   CALENDAR_MONTH_NUMBER NUMBER(10),
+   CALENDAR_MONTH_DESC  VARCHAR2(32),
+   DAYS_IN_CAL_MONTH    NUMBER(10),
+   END_OF_CALENDAR_MONTH DATE,
+   CALENDAR_WEEK_ID     NUMBER(32),
+   CALENDAR_WEEK_NUMBER NUMBER(32),
+   WEEK_END_DATE        DATE,
+   CALENDAR_DAY_ID      NUMBER(32),
+   DAY_DESC             VARCHAR2(32),
+   DAY_NUMBER_IN_WEEK   NUMBER(10),
+   DAY_NUMBER_IN_MONTH  NUMBER(10),
+   "DAY_NUMBER_IN YEAR" NUMBER(10),
+   constraint PK_DIM_GEN_TIMES primary key (EVENT_DT)
+);
