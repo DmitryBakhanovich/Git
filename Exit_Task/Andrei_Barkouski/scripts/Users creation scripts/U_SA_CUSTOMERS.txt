@@ -1,0 +1,10 @@
+drop user U_SA_CUSTOMERS;
+
+/*==============================================================*/
+/* User: U_SA_CUSTOMERS                                         */
+/*==============================================================*/
+create user U_SA_CUSTOMERS 
+  identified by "%PWD%"
+    default tablespace ts_sa_customers_data_01;
+
+grant CONNECT,RESOURCE to U_SA_CUSTOMERS;

@@ -1,0 +1,10 @@
+drop user U_DIM_TABLES;
+
+/*==============================================================*/
+/* User: U_DIM_TABLES                                           */
+/*==============================================================*/
+create user U_DIM_TABLES 
+  identified by "%PWD%"
+    default tablespace ts_star_dim_data_01;
+
+grant CONNECT,RESOURCE to U_DIM_TABLES;
