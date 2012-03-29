@@ -1,0 +1,10 @@
+drop user U_SAL_CL;
+
+/*==============================================================*/
+/* User: U_SAL_CL                                               */
+/*==============================================================*/
+create user U_SAL_CL 
+  identified by "%PWD%"
+    default tablespace ts_sal_cl_data_01;
+
+grant CONNECT,CREATE ANY VIEW,RESOURCE to U_SAL_CL;
