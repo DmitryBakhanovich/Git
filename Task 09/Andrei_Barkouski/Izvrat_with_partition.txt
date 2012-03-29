@@ -1,0 +1,175 @@
+
+select * from times_p_1
+DROP TABLE times_p_1
+create table times_p_1 as select * from (
+SELECT 
+  TRUNC( sd + rn ) time_id,
+  TO_CHAR( sd + rn, 'fmDay' ) day_name,
+  TO_CHAR( sd + rn, 'D' ) day_number_in_week,
+  TO_CHAR( sd + rn, 'DD' ) day_number_in_month,
+  TO_CHAR( sd + rn, 'DDD' ) day_number_in_year,
+  TO_CHAR( sd + rn, 'WW' ) calendar_week_number,
+  ( CASE
+      WHEN TO_CHAR( sd + rn, 'D' ) IN ( 1, 2, 3, 4, 5, 6 ) THEN
+        NEXT_DAY( sd + rn, 'SUNDAY' )
+      ELSE
+        ( sd + rn )
+    END ) week_ending_date,
+  TO_CHAR( sd + rn, 'MM' ) calendar_month_number,
+  TO_CHAR( LAST_DAY( sd + rn ), 'DD' ) days_in_cal_month,
+  LAST_DAY( sd + rn ) end_of_cal_month,
+  TO_CHAR( sd + rn, 'FMMonth' ) calendar_month_name,
+  ( ( CASE
+      WHEN TO_CHAR( sd + rn, 'Q' ) = 1 THEN
+        TO_DATE( '03/31/' || TO_CHAR( sd + rn, 'YYYY' ), 'MM/DD/YYYY' )
+      WHEN TO_CHAR( sd + rn, 'Q' ) = 2 THEN
+        TO_DATE( '06/30/' || TO_CHAR( sd + rn, 'YYYY' ), 'MM/DD/YYYY' )
+      WHEN TO_CHAR( sd + rn, 'Q' ) = 3 THEN
+        TO_DATE( '09/30/' || TO_CHAR( sd + rn, 'YYYY' ), 'MM/DD/YYYY' )
+      WHEN TO_CHAR( sd + rn, 'Q' ) = 4 THEN
+        TO_DATE( '12/31/' || TO_CHAR( sd + rn, 'YYYY' ), 'MM/DD/YYYY' )
+    END ) - TRUNC( sd + rn, 'Q' ) + 1 ) days_in_cal_quarter,
+  TRUNC( sd + rn, 'Q' ) beg_of_cal_quarter,
+  ( CASE
+      WHEN TO_CHAR( sd + rn, 'Q' ) = 1 THEN
+        TO_DATE( '03/31/' || TO_CHAR( sd + rn, 'YYYY' ), 'MM/DD/YYYY' )
+      WHEN TO_CHAR( sd + rn, 'Q' ) = 2 THEN
+        TO_DATE( '06/30/' || TO_CHAR( sd + rn, 'YYYY' ), 'MM/DD/YYYY' )
+      WHEN TO_CHAR( sd + rn, 'Q' ) = 3 THEN
+        TO_DATE( '09/30/' || TO_CHAR( sd + rn, 'YYYY' ), 'MM/DD/YYYY' )
+      WHEN TO_CHAR( sd + rn, 'Q' ) = 4 THEN
+        TO_DATE( '12/31/' || TO_CHAR( sd + rn, 'YYYY' ), 'MM/DD/YYYY' )
+    END ) end_of_cal_quarter,
+  TO_CHAR( sd + rn, 'Q' ) calendar_quarter_number,
+  TO_CHAR( sd + rn, 'YYYY' ) calendar_year,
+  ( TO_DATE( '12/31/' || TO_CHAR( sd + rn, 'YYYY' ), 'MM/DD/YYYY' )
+    - TRUNC( sd + rn, 'YEAR' ) ) days_in_cal_year,
+  TRUNC( sd + rn, 'YEAR' ) beg_of_cal_year,
+  TO_DATE( '12/31/' || TO_CHAR( sd + rn, 'YYYY' ), 'MM/DD/YYYY' ) end_of_cal_year
+FROM
+  ( 
+    SELECT 
+      TO_DATE( '12/31/2002', 'MM/DD/YYYY' ) sd,
+      rownum rn
+    FROM dual
+      CONNECT BY level <= 200
+  ))
+  
+  
+  
+drop table   TIMES_P
+  
+CREATE TABLE TIMES_P
+( TIME_ID DATE,
+day_name VARCHAR2(20),
+   day_number_in_week VARCHAR2(20),
+  day_number_in_month VARCHAR2(20),
+  day_number_in_year VARCHAR2(20),
+  calendar_week_number VARCHAR2(20),
+    calendar_month_number VARCHAR2(20),
+   days_in_cal_month VARCHAR2(20),
+     calendar_month_name VARCHAR2(20)
+)
+  PARTITION BY list (day_name)
+ ( 
+    PARTITION work_day VALUES ('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'),
+    PARTITION weekend VALUES ('Saturday', 'Sunday') 
+ )
+      
+      TABLESPACE TS_REFERENCES_EXT_DATA_01;
+ 
+    
+
+INSERT INTO TIMES_P (TIME_ID ,day_name , day_number_in_week ,
+  day_number_in_month ,
+  day_number_in_year ,
+  calendar_week_number ,
+    calendar_month_number ,
+   days_in_cal_month ,
+     calendar_month_name )
+     SELECT TIME_ID ,day_name , day_number_in_week ,
+  day_number_in_month ,
+  day_number_in_year ,
+  calendar_week_number ,
+    calendar_month_number ,
+   days_in_cal_month ,
+     calendar_month_name
+     FROM times_p_1
+
+      
+ALTER TABLE TIMES_P 
+MERGE PARTITIONS part_1, part_2 INTO PARTITION PART_3;
+
+ALTER TABLE TIMES_P MOVE PARTITION PART_3
+     TABLESPACE TS_REFERENCES_EXT_DATA_01 NOLOGGING COMPRESS;
+     
+ alter table times_p    
+split partition part_3
+  at ( to_date( '03-01-2003', 'mm-dd-yyyy' ) )
+   into ( partition part_1, partition part_2 );
+     
+
+ALTER TABLE times_p TRUNCATE PARTITION part_1;
+
+      
+
+
+SELECT * FROM TIMES_P
+
+select * from TIMES_P partition (weekend);
+
+
+
+ALTER TABLE times_p 
+   MERGE PARTITIONS weekend, work_day 
+   INTO PARTITION week;
+
+select * from TIMES_P partition (week);
+
+
+
+ALTER TABLE times_p 
+   SPLIT PARTITION week VALUES ('Monday', 'Tuesday') 
+   INTO 
+    ( Partition monday ,
+      Partition tuesday );
+
+select * from TIMES_P partition (tuesday)
+
+
+
+
+
+    
+
+CREATE TABLE TIMES_P
+( TIME_ID DATE,
+day_name VARCHAR2(20),
+   day_number_in_week VARCHAR2(20),
+  day_number_in_month VARCHAR2(20),
+  day_number_in_year VARCHAR2(20),
+  calendar_week_number VARCHAR2(20),
+    calendar_month_number VARCHAR2(20),
+   days_in_cal_month VARCHAR2(20),
+     calendar_month_name VARCHAR2(20)
+)
+  PARTITION BY HASH (calendar_month_name)
+ ( 
+    PARTITION jan,
+    PARTITION feb,
+    PARTITION mar,
+    PARTITION apr,
+    PARTITION may,
+    PARTITION jun,
+    PARTITION jul
+ )
+      
+      TABLESPACE TS_REFERENCES_EXT_DATA_01;
+
+select * from times_p partition (feb)
+
+
+ALTER TABLE times_p
+     COALESCE PARTITION;
+select * from times_p partition (feb)
+
