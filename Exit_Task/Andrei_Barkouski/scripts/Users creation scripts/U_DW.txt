@@ -1,0 +1,10 @@
+drop user U_DW;
+
+/*==============================================================*/
+/* User: U_DW                                                   */
+/*==============================================================*/
+create user U_DW 
+  identified by "%PWD%"
+    default tablespace TS_DW_DATA_01;
+
+grant CONNECT,RESOURCE to U_DW;
