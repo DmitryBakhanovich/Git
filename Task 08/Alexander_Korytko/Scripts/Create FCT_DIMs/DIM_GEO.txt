@@ -1,0 +1,24 @@
+alter table "u_dw_references".FCT_TRANSACTIONS_MONTH
+   drop constraint FK_FCT_TRAN_REFERENCE_DIM_GEO;
+
+drop table "u_dw_references".DIM_GEO cascade constraints;
+
+/*==============================================================*/
+/* Table: DIM_GEO                                               */
+/*==============================================================*/
+create table "u_dw_references".DIM_GEO 
+(
+   GEO_SUR_ID           NUMBER(32)           not null,
+   GEO_ID               NUMBER(32),
+   GEO_COUNTRY_ID       NUMBER(32),
+   GEO_COUNTRY_DESC     VARCHAR2(32),
+   GEO_COUNTRY_CODE2    VARCHAR2(32),
+   GEO_COUNTRY_CODE3    VARCHAR2(32),
+   GEO_REGION_ID        NUMBER(32),
+   GEO_REGION_DESC      VARCHAR2(32 BYTE),
+   GEO_REGION_CODE      VARCHAR2(32),
+   GEO_CONTINENT_ID     NUMBER(32),
+   GEO_CONTINENT_DESC   VARCHAR2(32 BYTE),
+   GEO_LEVEL_CODE       VARCHAR2(32),
+   constraint PK_DIM_GEO primary key (GEO_SUR_ID)
+);

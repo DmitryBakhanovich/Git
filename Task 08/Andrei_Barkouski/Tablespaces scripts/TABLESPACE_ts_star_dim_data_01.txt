@@ -1,0 +1,5 @@
+create tablespace "ts_star_dim_data_01"
+datafile 'ts_star_dim_data_01.dat'
+size 200M
+ autoextend on next 50M
+ segment space management auto;

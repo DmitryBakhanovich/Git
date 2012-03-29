@@ -1,0 +1,9 @@
+drop user "u_dw";
+
+/*==============================================================*/
+/* User: "u_dw"                                                 */
+/*==============================================================*/
+create user "u_dw" 
+  identified by "%PWD%";
+
+grant CONNECT,CREATE ANY TABLE,CREATE ANY VIEW,RESOURCE to "u_dw";

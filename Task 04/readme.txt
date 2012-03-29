@@ -1,0 +1,1 @@
+This folder stored all result data according Task 4
